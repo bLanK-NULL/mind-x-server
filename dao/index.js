@@ -48,18 +48,28 @@ const getProject = function (uid, pname) {
     let _sql = `select * from project where uid=${uid} and pname="${pname}";`
     return allService.query(_sql)
 }
-const getAllProjectName = function (uid) {
-    let _sql = `select pname from project where uid=${uid};`
+const getAllProject = function (uid) {
+    let _sql = `select pname, stamp from project where uid=${uid};`
     return allService.query(_sql)
 }
 const getProjectByPname = function (uid, pname) {
     let _sql = `select * from project where pname="${pname}" and uid=${uid};`
     return allService.query(_sql)
 }
+const renameProject = function (uid, newPname, oldPname) {
+    const _sql = `update project set pname="${newPname}" where pname="${oldPname}" and uid=${uid};`
+    return allService.query(_sql)
+}
+const deleteProject = function(uid, pname) {
+    const _sql = `DELETE FROM project where pname="${pname}" and uid=${uid};`
+    return allService.query(_sql)
+}
 module.exports = {
     login,
     uploadProject,
     getProject,
-    getAllProjectName,
-    getProjectByPname
+    getAllProject,
+    getProjectByPname,
+    renameProject,
+    deleteProject
 }

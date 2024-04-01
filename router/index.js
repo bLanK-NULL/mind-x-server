@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const router = new Router();
-const { login, uploadProject, getProject, getAllProjectName, getProjectByPname } = require('../dao/index')
+const { login, uploadProject, getProject, getAllProject, getProjectByPname, renameProject, deleteProject } = require('../dao/index')
 const { generateJWT, verifyJWT } = require('../utils/jwt')
 
 router.post('/login', async (ctx, next) => {
@@ -81,10 +81,10 @@ router.post('/getProjectFromServer', async (ctx, next) => {
         }
     }
 })
-router.get('/getAllProjectName', async (ctx, next) => {
+router.get('/getAllProject', async (ctx, next) => {
     const { uid } = ctx.state.userInfo;
     try {
-        const result = await getAllProjectName(uid);
+        const result = await getAllProject(uid);
         ctx.body = {
             success: true,
             message: '请求成功',
@@ -93,7 +93,7 @@ router.get('/getAllProjectName', async (ctx, next) => {
     } catch (err) {
         ctx.body = {
             success: false,
-            message: '/getAllProjectName 请求失败'
+            message: '/getAllProject 请求失败'
         }
     }
 
@@ -129,7 +129,53 @@ router.get('/users/:id', async (ctx, next) => {
     ctx.body = `User id: ${id}`;
 });
 
+router.post('/renameProject', async (ctx) => {
+    const { uid } = ctx.state.userInfo;
+    const { oldPname, newPname } = ctx.request.body;
+    try {
+        const result = await renameProject(uid, newPname, oldPname);
+        if (result.affectedRows) {
+            ctx.body = {
+                success: true,
+                message: '重命名成功',
+                newPname: newPname
+            }
+        } else {
+            ctx.body = {
+                success: false,
+                message: '/renameProject 请求失败',
+            }
+        }
+    } catch (error) {
+        ctx.body = {
+            success: false,
+            message: '禁止重复命名',
 
-
+        }
+    }
+})
+router.post('/deleteProject', async (ctx) => {
+    const { uid } = ctx.state.userInfo;
+    const { pname } = ctx.request.body;
+    try {
+        const result = await deleteProject(uid, pname)
+        if (result.affectedRows) {
+            ctx.body = {
+                success: true,
+                message: '删除成功',
+            }
+        } else {
+            ctx.body = {
+                success: false,
+                message: '删除失败'
+            }
+        }
+    } catch (error) {
+        ctx.body = {
+            success: false,
+            message: '删除失败'
+        }
+    }
+})
 
 module.exports = router;
