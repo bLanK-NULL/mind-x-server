@@ -43,7 +43,7 @@ router.post('/uploadProject', async (ctx, next) => {
             message: '上传失败'
         }
     }
-    if (result.affectedRows) {
+    if (result && result.affectedRows) {
         ctx.body = {
             success: true,
             message: '上传成功'
@@ -138,7 +138,7 @@ router.post('/renameProject', async (ctx) => {
     const { oldPname, newPname } = ctx.request.body;
     try {
         const result = await renameProject(uid, newPname, oldPname);
-        if (result.affectedRows) {
+        if (result && result.affectedRows) {
             ctx.body = {
                 success: true,
                 message: '重命名成功',
@@ -163,7 +163,7 @@ router.post('/deleteProject', async (ctx) => {
     const { pname } = ctx.request.body;
     try {
         const result = await deleteProject(uid, pname)
-        if (result.affectedRows) {
+        if (result && result.affectedRows) {
             ctx.body = {
                 success: true,
                 message: '删除成功',
