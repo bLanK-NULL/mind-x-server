@@ -2,9 +2,15 @@ const Router = require('koa-router');
 const router = new Router();
 const { login, uploadProject, getProject, getAllProject, getProjectByPname, renameProject, deleteProject } = require('../dao/index')
 const { generateJWT } = require('../utils/jwt')
-
+router.prefix('/api')
 router.post('/login', async (ctx, next) => {
     const { username, password } = ctx.request.body;
+    if (!username || !password) {
+        ctx.body = {
+            message: '账号或密码不能为空'
+        }
+        return;
+    }
     const user = await login(username, password);
     if (user.length) {
         const payload = {
