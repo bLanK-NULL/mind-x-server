@@ -11,9 +11,10 @@ const auth = async (ctx, next) => {
             ctx.body && (ctx.body.username = info.username);
         } else {
             //没验证过，不放行
-            ctx.status = 401;
+            // ctx.status = 401;
             ctx.body = {
-                message: 'auth.js 验证不通过'
+                code: 401,
+                message: '未授权'
             }
         }
     } else {

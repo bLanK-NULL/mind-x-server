@@ -1,10 +1,9 @@
 const Router = require('koa-router');
 const router = new Router();
 const { login, uploadProject, getProject, getAllProject, getProjectByPname, renameProject, deleteProject } = require('../dao/index')
-const { generateJWT, verifyJWT } = require('../utils/jwt')
+const { generateJWT } = require('../utils/jwt')
 
 router.post('/login', async (ctx, next) => {
-    console.log('访问 /login')
     const { username, password } = ctx.request.body;
     const user = await login(username, password);
     if (user.length) {
@@ -28,7 +27,6 @@ router.post('/login', async (ctx, next) => {
 
 router.post('/uploadProject', async (ctx, next) => {
     //通过中间件auth把token解析后存在了ctx.state.user中
-    console.log('访问 /uploadProject')
     const { uid, username } = ctx.state.userInfo;
     let result;
     try {
@@ -177,5 +175,7 @@ router.post('/deleteProject', async (ctx) => {
         }
     }
 })
-
+router.get('/checkToken', async (ctx) => {
+    ctx.body = {};
+})
 module.exports = router;
