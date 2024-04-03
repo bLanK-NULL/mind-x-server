@@ -4,12 +4,15 @@ const router = require('./router/index')
 const { koaBody } = require('koa-body');
 const cors = require('koa2-cors');
 const auth = require('./middleware/auth')
+const serve = require('koa-static')
+const path = require('path')
 const port = 3000;
 
 app.use(cors())
     .use(koaBody())
     .use(auth)
     // .use(errorHandler)
+    .use(serve(path.resolve(__dirname, 'dist'))) 
     .use(router.routes()).use(router.allowedMethods())
 
 app.on('error', (err, ctx) => {
