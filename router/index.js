@@ -181,7 +181,5 @@ router.post('/deleteProject', async (ctx) => {
         }
     }
 })
-router.get('/checkToken', async (ctx) => {
-    ctx.body = {};
-})
+
 module.exports = router;
